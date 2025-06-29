@@ -1,0 +1,13 @@
+[
+    {
+        "name": "kyle",
+        "email": "kyletayzon@gmail.com",
+        "password": "$2y$10$GoiGp7SQb0gFBChnzqkzFOJbVGNenghx20yVWVtmN7KHrxpk.miY.",
+        "street": "Banahaw",
+        "region": "130000000",
+        "province": "",
+        "municipality": "137404000",
+        "barangay": "137404101",
+        "zip": "1111"
+    }
+]

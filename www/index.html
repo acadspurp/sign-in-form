@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Connect</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #e0e5ec;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 5px;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      width: 100%;
+    }
+    .container {
+      width: calc(100% - 10px);
+      max-width: 850px;
+      margin: 10px auto;
+      background: #e0e5ec;
+      border-radius: 15px;
+      box-shadow: 8px 8px 16px #bcc3cc, -8px -8px 16px #ffffff;
+      padding: 15px;
+      box-sizing: border-box;
+    }
+    
+    /* Toggle Switch Styles */
+    .toggle-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+      width: 100%;
+    }
+    
+    .toggle-wrapper {
+      position: relative;
+      background: #e0e5ec;
+      border-radius: 25px;
+      padding: 6px;
+      box-shadow: inset 4px 4px 8px #bcc3cc, inset -4px -4px 8px #ffffff;
+      display: flex;
+      align-items: center;
+      min-width: 280px;
+      max-width: 350px;
+      width: 100%;
+    }
+    
+    .toggle-switch {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      width: calc(50% - 6px);
+      height: calc(100% - 12px);
+      background: #4c6fff;
+      border-radius: 20px;
+      transition: transform 0.3s ease;
+      box-shadow: 2px 2px 8px rgba(76, 111, 255, 0.3);
+      z-index: 1;
+    }
+    
+    .toggle-switch.signup {
+      transform: translateX(100%);
+    }
+    
+    .toggle-label {
+      flex: 1;
+      text-align: center;
+      padding: 12px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      color: #888;
+      transition: color 0.3s ease;
+      position: relative;
+      z-index: 2;
+      border-radius: 20px;
+      min-height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .toggle-label.active {
+      color: white;
+    }
+    
+    .toggle-label:hover:not(.active) {
+      color: #4c6fff;
+    }
+
+    .form-section {
+      display: none;
+      padding: 10px;
+    }
+    .form-section.active {
+      display: block;
+    }
+    h2 {
+      margin: 0 0 30px;
+      font-size: 24px;
+      color: #333;
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .input-group, .address-fields {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    input, select {
+      padding: 12px 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      background: #e0e5ec;
+      box-shadow: inset 4px 4px 8px #bcc3cc, inset -4px -4px 8px #ffffff;
+      transition: all 0.3s ease;
+      min-height: 44px;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+    }
+    input:focus, select:focus {
+      outline: none;
+      box-shadow: inset 3px 3px 6px #bcc3cc, inset -3px -3px 6px #ffffff;
+    }
+    .btn {
+      width: 100%;
+      padding: 16px;
+      background: #4c6fff;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 5px 5px 10px #bcc3cc, -5px -5px 10px #ffffff;
+      transition: background 0.3s;
+      min-height: 48px;
+      margin-top: 10px;
+    }
+    .btn:hover {
+      background: #3b5cff;
+    }
+    .btn:active {
+      transform: translateY(1px);
+    }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      color: white;
+      animation: slideIn 0.5s ease-out;
+      z-index: 1000;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .popup.success {
+      background-color: #4CAF50;
+    }
+    .popup.error {
+      background-color: #f44336;
+    }
+    @keyframes slideIn {
+      from {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Tablet styles */
+    @media (min-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .container {
+        width: calc(100% - 20px);
+        max-width: 850px;
+        padding: 30px;
+        margin: 20px auto;
+        border-radius: 20px;
+      }
+      
+      .toggle-container {
+        margin-bottom: 40px;
+      }
+      
+      .toggle-wrapper {
+        min-width: 320px;
+        max-width: 400px;
+      }
+      
+      .toggle-label {
+        font-size: 17px;
+        padding: 14px 25px;
+      }
+      
+      form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+      
+      .btn {
+        grid-column: 1 / -1;
+      }
+      
+      #signin form {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .popup {
+        left: auto;
+        right: 20px;
+        max-width: 400px;
+      }
+    }
+
+    /* Desktop styles */
+    @media (min-width: 1024px) {
+      body {
+        overflow: hidden;
+        height: 100vh;
+      }
+      
+      .container {
+        margin: 20px auto;
+      }
+    }
+
+    /* Small mobile devices */
+    @media (max-width: 480px) {
+      body {
+        padding: 2px;
+      }
+      
+      .container {
+        width: calc(100vw - 4px);
+        margin: 2px auto;
+        padding: 12px;
+        border-radius: 12px;
+      }
+      
+      .toggle-container {
+        margin-bottom: 20px;
+      }
+      
+      .toggle-wrapper {
+        min-width: 240px;
+        max-width: 280px;
+        padding: 4px;
+      }
+      
+      .toggle-switch {
+        top: 4px;
+        left: 4px;
+        width: calc(50% - 4px);
+        height: calc(100% - 8px);
+      }
+      
+      .toggle-label {
+        font-size: 14px;
+        padding: 10px 15px;
+        min-height: 16px;
+      }
+      
+      h2 {
+        font-size: 18px;
+        margin-bottom: 15px;
+      }
+      
+      input, select {
+        padding: 10px 12px;
+        font-size: 16px;
+        border-radius: 6px;
+      }
+      
+      .btn {
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 6px;
+      }
+      
+      form {
+        gap: 15px;
+      }
+    }
+
+    /* Extra small devices */
+    @media (max-width: 360px) {
+      .container {
+        width: calc(100vw - 2px);
+        margin: 1px auto;
+        padding: 10px;
+      }
+      
+      .toggle-wrapper {
+        min-width: 220px;
+        max-width: 260px;
+      }
+      
+      .toggle-label {
+        font-size: 13px;
+        padding: 8px 12px;
+      }
+      
+      h2 {
+        font-size: 16px;
+      }
+    }
+
+    /* Prevent zoom on input focus for iOS Safari */
+    @media screen and (-webkit-min-device-pixel-ratio: 0) {
+      select, textarea, input[type="text"], input[type="password"], 
+      input[type="datetime"], input[type="datetime-local"], 
+      input[type="date"], input[type="month"], input[type="time"], 
+      input[type="week"], input[type="number"], input[type="email"], 
+      input[type="url"] {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="toggle-container">
+      <div class="toggle-wrapper">
+        <div class="toggle-switch" id="toggle-switch"></div>
+        <div class="toggle-label active" data-form="signin">Sign In</div>
+        <div class="toggle-label" data-form="signup">Sign Up</div>
+      </div>
+    </div>
+
+    <div id="signin" class="form-section active">
+      <h2>Welcome Back!</h2>
+      <form id="signin-form">
+        <div class="input-group">
+          <input type="email" placeholder="Email" name="email" required>
+        </div>
+        <div class="input-group">
+          <input type="password" placeholder="Password" name="password" required>
+        </div>
+        <button type="submit" class="btn">Sign In</button>
+      </form>
+    </div>
+
+    <div id="signup" class="form-section">
+      <h2>Create Account</h2>
+      <form id="signup-form">
+        <div class="input-group">
+          <input type="text" placeholder="Name" name="name" required>
+        </div>
+        <div class="input-group">
+          <input type="email" placeholder="Email" name="email" required>
+        </div>
+        <div class="input-group">
+          <input type="password" placeholder="Password" name="password" required>
+        </div>
+        <div class="address-fields">
+          <input type="text" placeholder="Street Address" name="street" required>
+        </div>
+        <div class="address-fields">
+          <select id="region" name="region" required>
+            <option value="">Select Region</option>
+          </select>
+        </div>
+        <div class="address-fields">
+          <select id="province" name="province">
+            <option value="">Select Province</option>
+          </select>
+        </div>
+        <div class="address-fields">
+          <select id="district" name="municipality" required>
+            <option value="">Select City/Municipality</option>
+          </select>
+        </div>
+        <div class="address-fields">
+          <select id="barangay" name="barangay" required>
+            <option value="">Select Barangay</option>
+          </select>
+        </div>
+        <div class="address-fields">
+          <input type="text" placeholder="Zip Code" name="zip" required>
+        </div>
+        <button type="submit" class="btn">Sign Up</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="popup" class="popup"></div>
+
+  <!-- JS Logic -->
+  <script>
+    const BASE_URL = "https://psgc.gitlab.io/api";
+
+    async function populateRegions() {
+      const res = await fetch(`${BASE_URL}/regions/`);
+      const regions = await res.json();
+      const select = document.getElementById('region');
+      select.innerHTML = '<option value="">Select Region</option>';
+      regions.forEach(region => {
+        const option = document.createElement('option');
+        option.value = region.code;
+        option.textContent = region.name;
+        select.appendChild(option);
+      });
+    }
+
+    async function populateProvinces(regionCode) {
+      const provinceSelect = document.getElementById('province');
+      const districtSelect = document.getElementById('district');
+      const barangaySelect = document.getElementById('barangay');
+
+      provinceSelect.innerHTML = '<option value="">Select Province</option>';
+      districtSelect.innerHTML = '<option value="">Select Municipality</option>';
+      barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+
+      const provRes = await fetch(`${BASE_URL}/regions/${regionCode}/provinces/`);
+      const provinces = await provRes.json();
+
+      if (provinces.length === 0) {
+        provinceSelect.innerHTML = '<option value="">N/A</option>';
+        const citiesRes = await fetch(`${BASE_URL}/regions/${regionCode}/cities-municipalities/`);
+        const cities = await citiesRes.json();
+        districtSelect.innerHTML = '<option value="">Select Municipality</option>';
+        cities.forEach(city => {
+          const option = document.createElement('option');
+          option.value = city.code;
+          option.textContent = city.name;
+          districtSelect.appendChild(option);
+        });
+      } else {
+        provinces.forEach(province => {
+          const option = document.createElement('option');
+          option.value = province.code;
+          option.textContent = province.name;
+          provinceSelect.appendChild(option);
+        });
+      }
+    }
+
+    async function populateMunicipalities(provinceCode) {
+      const res = await fetch(`${BASE_URL}/provinces/${provinceCode}/cities-municipalities/`);
+      const cities = await res.json();
+      const select = document.getElementById('district');
+      select.innerHTML = '<option value="">Select Municipality</option>';
+      cities.forEach(city => {
+        const option = document.createElement('option');
+        option.value = city.code;
+        option.textContent = city.name;
+        select.appendChild(option);
+      });
+    }
+
+    async function populateBarangays(municipalityCode) {
+      const res = await fetch(`${BASE_URL}/cities-municipalities/${municipalityCode}/barangays/`);
+      const barangays = await res.json();
+      const select = document.getElementById('barangay');
+      select.innerHTML = '<option value="">Select Barangay</option>';
+      barangays.forEach(barangay => {
+        const option = document.createElement('option');
+        option.value = barangay.code;
+        option.textContent = barangay.name;
+        select.appendChild(option);
+      });
+    }
+
+    document.getElementById('region').addEventListener('change', function () {
+      populateProvinces(this.value);
+    });
+
+    document.getElementById('province').addEventListener('change', function () {
+      populateMunicipalities(this.value);
+    });
+
+    document.getElementById('district').addEventListener('change', function () {
+      populateBarangays(this.value);
+    });
+
+    // Toggle switch functionality
+    function switchForm(formId) {
+      const toggleSwitch = document.getElementById('toggle-switch');
+      const labels = document.querySelectorAll('.toggle-label');
+      const formSections = document.querySelectorAll('.form-section');
+      
+      // Update form sections
+      formSections.forEach(section => section.classList.remove('active'));
+      document.getElementById(formId).classList.add('active');
+      
+      // Update toggle switch position and labels
+      labels.forEach(label => label.classList.remove('active'));
+      const activeLabel = document.querySelector(`[data-form="${formId}"]`);
+      activeLabel.classList.add('active');
+      
+      if (formId === 'signup') {
+        toggleSwitch.classList.add('signup');
+      } else {
+        toggleSwitch.classList.remove('signup');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      populateRegions();
+
+      // Add click event listeners to toggle labels
+      document.querySelectorAll('.toggle-label').forEach(label => {
+        label.addEventListener('click', () => {
+          const formId = label.getAttribute('data-form');
+          switchForm(formId);
+        });
+      });
+
+      const signupForm = document.getElementById('signup-form');
+      const signinForm = document.getElementById('signin-form');
+
+      signupForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+
+        fetch('save_user.php', {
+          method: 'POST',
+          body: formData
+        })
+        .then(res => res.json())
+        .then(response => {
+          if (response.status === 'success') {
+            showPopup("Sign up successful!", "success");
+            this.reset();
+          } else {
+            showPopup("Sign up failed: " + response.message, "error");
+          }
+        })
+        .catch(() => showPopup("An error occurred during sign up.", "error"));
+      });
+
+      signinForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+
+        fetch('login_user.php', {
+          method: 'POST',
+          body: formData
+        })
+          .then(res => res.json())
+          .then(response => {
+            if (response.status === 'success') {
+              showPopup("Sign in successful!", "success");
+              this.reset();
+            } else {
+              showPopup("Sign in failed: " + response.message, "error");
+            }
+          })
+          .catch(() => showPopup("An error occurred during sign in.", "error"));
+      });
+    });
+
+    function showPopup(message, type) {
+      const popup = document.getElementById("popup");
+      popup.textContent = message;
+      popup.className = `popup ${type}`;
+      popup.style.display = "block";
+      setTimeout(() => popup.style.display = "none", 3000);
+    }
+  </script>
+</body>
+</html>
